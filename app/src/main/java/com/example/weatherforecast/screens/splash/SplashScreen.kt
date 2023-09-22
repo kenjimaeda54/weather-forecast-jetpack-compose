@@ -1,5 +1,9 @@
-package com.example.weatherforecast.screens
+package com.example.weatherforecast.screens.splash
 
+import android.annotation.SuppressLint
+import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,9 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -24,9 +30,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherforecast.R
+import com.example.weatherforecast.navigation.WeatherScreens
+import kotlinx.coroutines.delay
 
+@SuppressLint("RememberReturnType")
 @Composable
-fun SplashScreen() {
+fun SplashScreen(navController: NavController) {
+    val scale = remember {
+        Animatable(initialValue = 0f)
+    }
+
+    //chamado no inicio e do coretine
+    LaunchedEffect(key1 = true, block = {
+        scale.animateTo(targetValue = 0.7f, animationSpec = tween(
+            durationMillis = 800,
+            easing = {
+                OvershootInterpolator().getInterpolation(it)
+            }
+        ))
+        delay(2000L)
+        navController.navigate(WeatherScreens.MainScreen.name)
+    })
+
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -37,6 +62,7 @@ fun SplashScreen() {
         Box(
             modifier = Modifier
                 .size(330.dp)
+                .scale(scale.value)
                 .border(
                     border = BorderStroke(width = 1.dp, color = Color.Gray.copy(alpha = 0.2f)),
                     shape = CircleShape
@@ -62,8 +88,3 @@ fun SplashScreen() {
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun SplashScreenPreview() {
-    SplashScreen()
-}

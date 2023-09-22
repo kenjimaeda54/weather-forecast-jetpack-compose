@@ -57,6 +57,13 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
 
+    //hilt navigation
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+
     //Cortines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 

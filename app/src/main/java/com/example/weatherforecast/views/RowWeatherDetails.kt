@@ -84,7 +84,7 @@ fun RowWeatherDetails(item: List) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 15.dp),
+            .padding(horizontal = 10.dp, vertical = 7.dp),
         shape = CircleShape.copy(topEnd = CornerSize(10.dp)), color = Color.White
     ) {
         Row(

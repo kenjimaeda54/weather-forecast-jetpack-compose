@@ -2,6 +2,7 @@ package com.example.weatherforecast.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -37,6 +41,7 @@ import com.example.weatherforecast.utillity.formatDecimal
 import com.example.weatherforecast.utillity.formatterTimeStampToDate
 import com.example.weatherforecast.utillity.formatterTimeStampToHours
 import com.example.weatherforecast.views.RowItemWeather
+import com.example.weatherforecast.views.RowWeatherDetails
 import com.example.weatherforecast.views.TopBarApp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -172,7 +177,27 @@ fun MainScreen(navController: NavController, forecast: Forecast) {
                     )
                 }
             }
-            
+            Text(
+                modifier = Modifier.padding(bottom = 15.dp),
+                text = "This Week", style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Surface(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth(),
+                color = Color.Gray,
+                shape = RoundedCornerShape(size = 8.dp)
+            ) {
+                LazyColumn {
+                    items(items = forecast.list) { weather ->
+                        RowWeatherDetails(item = weather)
+                    }
+                }
+            }
         }
     }
 }

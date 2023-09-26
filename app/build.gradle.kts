@@ -53,8 +53,20 @@ android {
 
 dependencies {
     //Navigation
-    val navVersion = "2.7.2"
+    val navVersion = "2.7.3"
     implementation("androidx.navigation:navigation-compose:$navVersion")
+
+
+    //Room
+    val roomVersion = "2.5.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    // To use Kotlin annottaiton processing toll (Kapt)
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    //Rom with coroutine
+    implementation("androidx.room:room-ktx:$roomVersion")
 
 
     //hilt navigation

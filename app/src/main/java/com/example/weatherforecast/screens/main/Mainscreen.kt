@@ -1,11 +1,8 @@
 package com.example.weatherforecast.screens.main
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.text.Layout
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
@@ -36,30 +34,32 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.weatherforecast.R
+import com.example.weatherforecast.model.FavoritesModel
 import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.navigation.WeatherScreens
 import com.example.weatherforecast.utillity.formatDecimal
 import com.example.weatherforecast.utillity.formatterTimeStampToDate
 import com.example.weatherforecast.utillity.formatterTimeStampToHours
+import com.example.weatherforecast.viewModels.ForecastFavoriteViewModel
 import com.example.weatherforecast.views.RowItemWeather
 import com.example.weatherforecast.views.RowWeatherDetails
 import com.example.weatherforecast.views.TopBarApp
@@ -70,7 +70,11 @@ val listItemsDropMenu = listOf<String>("About", "Favorites", "Settings")
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController, forecast: Forecast) {
+fun MainScreen(
+    navController: NavController,
+    forecast: Forecast,
+    favoriteViewModel: ForecastFavoriteViewModel = hiltViewModel()
+) {
     val listWeather = forecast.list[0]
     val imageUrl = "https://openweathermap.org/img/wn/${listWeather.weather[0].icon}@2x.png"
     val showDialog = remember {
@@ -78,9 +82,23 @@ fun MainScreen(navController: NavController, forecast: Forecast) {
     } //precisa mandar um mutable state se nao sera considerado imutavel quando passa para uma funcoa mesmo sendo var
 
     if (showDialog.value) {
-        ShowDialogDropMenu(showDialog)
+        ShowDialogDropMenu(showDialog, navController)
     }
 
+    fun handleClickIconFavorite() {
+        val favoritesModel = FavoritesModel(
+            city = forecast.city.name,
+            country = forecast.city.country
+        )
+        val haveCity = favoriteViewModel.listFavorite.value.find {
+            it.city == forecast.city.name
+        }
+
+        if (haveCity == null) {
+            favoriteViewModel.insertFavorite(favoritesModel)
+        }
+
+    }
 
     Scaffold(
         topBar = {
@@ -100,6 +118,16 @@ fun MainScreen(navController: NavController, forecast: Forecast) {
                             modifier = Modifier.clickable { showDialog.value = true },
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = "More Vert Top Bar Icon"
+                        )
+                    }, navigationIcon = {
+                        Image(
+                            modifier = Modifier
+                                .scale(0.8f)
+                                .clickable { handleClickIconFavorite() },
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Favorite Icon",
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(Color.Red.copy(0.8f))
                         )
                     })
             }
@@ -236,7 +264,7 @@ fun MainScreen(navController: NavController, forecast: Forecast) {
 }
 
 @Composable
-fun ShowDialogDropMenu(showDialog: MutableState<Boolean>) {
+fun ShowDialogDropMenu(showDialog: MutableState<Boolean>, navController: NavController) {
 
     //vai alinhar no top ao lado esqeurdo da view por causa da propriedade wrapContentSize
     Column(
@@ -266,7 +294,11 @@ fun ShowDialogDropMenu(showDialog: MutableState<Boolean>) {
 
                 }, onClick = {
                     showDialog.value = false
-                    Log.d("Tag",it)
+                    when (it) {
+                        "About" -> navController.navigate(WeatherScreens.AboutScreen.name)
+                        "Favorites" -> navController.navigate(WeatherScreens.FavoriteScreen.name)
+                        else -> navController.navigate(WeatherScreens.SettingsScreen.name)
+                    }
                 })
             }
         }
@@ -274,9 +306,3 @@ fun ShowDialogDropMenu(showDialog: MutableState<Boolean>) {
 
 }
 
-
-//@Composable
-//@Preview(showBackground = true)
-//fun MainScreenPreview() {
-//    MainScreen()
-//}

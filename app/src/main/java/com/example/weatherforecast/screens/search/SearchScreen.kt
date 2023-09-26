@@ -54,7 +54,7 @@ fun SearchScreen(navController: NavController) {
 
 
     Scaffold(topBar = {
-        TopBarApp(title = "SearchScreen", navigationIcon = {
+        TopBarApp(title = "Search", navigationIcon = {
             Image(
                 modifier = Modifier.clickable { navController.popBackStack() },
                 imageVector = Icons.Default.ArrowBack,

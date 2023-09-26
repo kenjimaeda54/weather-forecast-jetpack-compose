@@ -2,6 +2,8 @@ package com.example.weatherforecast.screens.main
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -77,6 +80,10 @@ fun MainScreen(
 ) {
     val listWeather = forecast.list[0]
     val imageUrl = "https://openweathermap.org/img/wn/${listWeather.weather[0].icon}@2x.png"
+    val findFavorite = favoriteViewModel.listFavorite.collectAsState().value.find {
+        it.city == forecast.city.name
+    }
+    val context = LocalContext.current
     val showDialog = remember {
         mutableStateOf(false)
     } //precisa mandar um mutable state se nao sera considerado imutavel quando passa para uma funcoa mesmo sendo var
@@ -85,18 +92,14 @@ fun MainScreen(
         ShowDialogDropMenu(showDialog, navController)
     }
 
+ 
     fun handleClickIconFavorite() {
         val favoritesModel = FavoritesModel(
             city = forecast.city.name,
             country = forecast.city.country
         )
-        val haveCity = favoriteViewModel.listFavorite.value.find {
-            it.city == forecast.city.name
-        }
-
-        if (haveCity == null) {
-            favoriteViewModel.insertFavorite(favoritesModel)
-        }
+        favoriteViewModel.insertFavorite(favoritesModel)
+        Toast.makeText(context,"Added city on favorite", LENGTH_SHORT).show()
 
     }
 
@@ -120,15 +123,17 @@ fun MainScreen(
                             contentDescription = "More Vert Top Bar Icon"
                         )
                     }, navigationIcon = {
-                        Image(
-                            modifier = Modifier
-                                .scale(0.8f)
-                                .clickable { handleClickIconFavorite() },
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = "Favorite Icon",
-                            contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(Color.Red.copy(0.8f))
-                        )
+                        if (findFavorite == null) {
+                            Image(
+                                modifier = Modifier
+                                    .scale(0.8f)
+                                    .clickable { handleClickIconFavorite() },
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Favorite Icon",
+                                contentScale = ContentScale.Fit,
+                                colorFilter = ColorFilter.tint(Color.Red.copy(0.8f))
+                            )
+                        }
                     })
             }
         }) {

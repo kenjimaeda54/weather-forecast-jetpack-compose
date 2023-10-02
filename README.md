@@ -16,8 +16,11 @@ abstract class ForecastDatabase: RoomDatabase() {
 
 
 ```
-- Qunaod deseja restaurar uma valor de um estado dentro de uma Activy Ou Fragment pode usar o rememberSaveable,[artigo]([https://developer.android.com/jetpack/compose/state?hl=pt-br#:~:text=Embora%20remember%20ajude%20a%20manter,ser%20salvo%20em%20um%20Bundle%20.](https://stefma.medium.com/jetpack-compose-remember-mutablestateof-derivedstateof-and-remembersaveable-explained-270dbaa61b8)https://stefma.medium.com/jetpack-compose-remember-mutablestateof-derivedstateof-and-remembersaveable-explained-270dbaa61b8)
-- Abaixo alguns recursos especificos do kotlin que ajuda no dia a dia
+
+##
+
+- Quando deseja restaurar uma valor de um estado dentro de uma Activy Ou Fragment pode usar o rememberSaveable,[artigo]([https://developer.android.com/jetpack/compose/state?hl=pt-br#:~:text=Embora%20remember%20ajude%20a%20manter,ser%20salvo%20em%20um%20Bundle%20.](https://stefma.medium.com/jetpack-compose-remember-mutablestateof-derivedstateof-and-remembersaveable-explained-270dbaa61b8)https://stefma.medium.com/jetpack-compose-remember-mutablestateof-derivedstateof-and-remembersaveable-explained-270dbaa61b8)
+- Abaixo alguns recursos específicos do kotlin que ajuda no dia a dia
 
 ```kotlin
 //kotlin não possui if ternário, porem pode associar variável a praticamente tudo como exemplo abaixo
@@ -28,6 +31,7 @@ val unit = if(forecastViewModel.listUnits.collectAsState().value.isEmpty())  {
 } else {
         "miles/hours"
 }
+
 
 
 //também pode usar o when uma alternativa elegante ao switch

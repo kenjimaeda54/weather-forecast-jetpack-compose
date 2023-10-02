@@ -11,6 +11,6 @@ interface ForecastService {
         @Query("q") city: String,
         @Query("count") count: Int = 6,
         @Query("appid") appid: String = Constants.tokenId,
-        @Query("units") units: String = "imperial"
+        @Query("units") unit: String = "imperial"
     ): Forecast
 }

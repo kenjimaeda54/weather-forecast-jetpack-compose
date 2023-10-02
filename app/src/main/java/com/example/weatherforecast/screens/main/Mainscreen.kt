@@ -59,6 +59,7 @@ import com.example.weatherforecast.R
 import com.example.weatherforecast.model.FavoritesModel
 import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.navigation.WeatherScreens
+import com.example.weatherforecast.utillity.UnitsTemperature
 import com.example.weatherforecast.utillity.formatDecimal
 import com.example.weatherforecast.utillity.formatterTimeStampToDate
 import com.example.weatherforecast.utillity.formatterTimeStampToHours
@@ -76,7 +77,8 @@ val listItemsDropMenu = listOf<String>("About", "Favorites", "Settings")
 fun MainScreen(
     navController: NavController,
     forecast: Forecast,
-    favoriteViewModel: ForecastFavoriteViewModel = hiltViewModel()
+    favoriteViewModel: ForecastFavoriteViewModel = hiltViewModel(),
+    unit: String
 ) {
     val listWeather = forecast.list[0]
     val imageUrl = "https://openweathermap.org/img/wn/${listWeather.weather[0].icon}@2x.png"
@@ -215,7 +217,7 @@ fun MainScreen(
                     )
                     RowItemWeather(
                         imageInt = R.drawable.wind,
-                        value = "${listWeather.pressure} mph"
+                        value = "${formatDecimal(listWeather.speed)} $unit"
                     )
                 }
                 Divider(

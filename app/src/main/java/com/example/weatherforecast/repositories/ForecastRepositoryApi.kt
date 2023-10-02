@@ -9,9 +9,9 @@ import javax.inject.Inject
 
 class ForecastRepositoryApi @Inject constructor(private val forecastService: ForecastService) {
 
-    suspend fun getForecast(city: String): DataOrExpection<Forecast, Boolean, Exception> {
+    suspend fun getForecast(city: String,unit: String): DataOrExpection<Forecast, Boolean, Exception> {
         val data = try {
-            forecastService.getForecast(city)
+            forecastService.getForecast(city, unit = unit)
         } catch (expection: Exception) {
             Log.d("Expection", expection.toString())
             return DataOrExpection(expection = expection)

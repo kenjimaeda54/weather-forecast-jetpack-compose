@@ -29,7 +29,11 @@ fun WeatherRoutes() {
         )) {
             //https://developer.android.com/jetpack/compose/libraries?hl=pt-br#hilt-navigation
             val mainViewModel = hiltViewModel<ForecastViewModel>()
-            MainFragment(navController = navController, mainViewModel, city = it.arguments?.getString("city"))
+            MainFragment(
+                navController = navController,
+                mainViewModel,
+                city = it.arguments?.getString("city")
+            )
         }
 
         composable(WeatherScreens.SearchScreen.name) {
